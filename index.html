@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="hi"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101722"><title>Prime Ledger V6</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--bg:#0b111b;--p:#151f2d;--p2:#1c2939;--line:#2b3a4d;--gold:#e7bd62;--muted:#a4b0c0;--green:#63d6a0;--blue:#8bc4ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f5f7fa;font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:16px;background:linear-gradient(135deg,#1b293a,#101722);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:43px;height:43px;border-radius:13px;background:linear-gradient(145deg,#f6dda0,#bd8b35);color:#1b160b;display:grid;place-items:center;font-weight:900;font-size:22px}
+h1{font-size:18px;margin:0}header p{margin:3px 0 0;color:var(--muted);font-size:11px;letter-spacing:1px}
+main{max-width:900px;margin:auto;padding:14px 13px 38px}.notice{border:1px solid #6b542d;background:#302719;color:#f2dba8;border-radius:12px;padding:10px 12px;font-size:11px;line-height:1.55;margin-bottom:13px}
+.hero{background:linear-gradient(135deg,#26364a,#172231);border:1px solid #34465c;border-radius:17px;padding:16px;margin-bottom:11px}.eyebrow{font-size:11px;color:#b7c2d0;letter-spacing:1px}.heroVal{font-size:28px;font-weight:800;color:#f3d48e;margin:5px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat,.mini{background:var(--p);border:1px solid var(--line);border-radius:13px;padding:12px}.lab,.mini span{font-size:11px;color:var(--muted)}.stat strong,.mini strong{display:block;font-size:19px;margin-top:6px}.gold{color:var(--gold)}.green{color:var(--green)}.blue{color:var(--blue)}
+.toolbar{display:flex;gap:8px;margin:14px 0 12px;overflow:auto}.tab,button{border:1px solid var(--line);background:var(--p2);color:#f5f7fa;border-radius:10px;padding:10px 12px;font-weight:650;cursor:pointer;white-space:nowrap}.tab.active,button.primary{background:var(--gold);color:#1b160b;border-color:var(--gold)}button:disabled{opacity:.45;cursor:not-allowed}
+.page{display:none}.page.active{display:block}h2{font-size:16px;margin:17px 0 10px}.row{display:flex;align-items:center;justify-content:space-between;gap:9px}small{font-size:11px;color:var(--muted)}
+.people{display:grid;gap:9px}.person{background:var(--p);border:1px solid var(--line);border-radius:14px;padding:13px;cursor:pointer}.chip{font-size:10px;background:#26392f;color:#a1e4bd;border-radius:30px;padding:4px 8px}
+form{display:grid;gap:11px;background:var(--p);border:1px solid var(--line);padding:14px;border-radius:14px}label{display:grid;gap:6px;color:var(--muted);font-size:12px}input,select{width:100%;padding:11px;border-radius:9px;border:1px solid var(--line);background:#0d1520;color:#fff;font:inherit}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
+.profile{background:linear-gradient(135deg,#26364a,#172231);border:1px solid #34465c;border-radius:16px;padding:15px;margin:12px 0}.profile .big{font-size:26px;font-weight:800;color:#f3d48e;margin:5px 0}.boxgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.actions button{white-space:normal;min-height:46px}
+.history{display:grid;gap:8px}.tx{background:var(--p);border:1px solid var(--line);border-radius:12px;padding:11px}.tx .amt{font-weight:750}.tx.plus .amt{color:var(--green)}.tx.minus .amt{color:var(--blue)}.tx.interest .amt{color:var(--gold)}
+.empty{text-align:center;color:var(--muted);padding:24px;background:var(--p);border-radius:13px}.foot{font-size:11px;color:var(--muted);line-height:1.55;margin-top:17px}.tools{display:flex;gap:8px;flex-wrap:wrap}.tools button{flex:1}
+#search{margin:8px 0 12px}.status{font-size:11px;color:var(--muted);margin-top:8px}
+@media(min-width:650px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style></head><body>
+<header><div class="brand"><div class="logo">P</div><div><h1>PRIME LEDGER</h1><p>LOCAL RECORDS · BACKUP & RESTORE</p></div></div></header>
+<main>
+<div class="notice"><b>सुरक्षा नोट:</b> यह सीखने/परीक्षण के लिए प्रोटोटाइप है और इसमें केवल काल्पनिक डेटा इस्तेमाल करें। असली ग्राहक या वित्तीय जानकारी न डालें। इसमें लॉगिन, एन्क्रिप्शन, सुरक्षित क्लाउड बैकअप या कानूनी अनुपालन नहीं है। वास्तविक उधार/वित्तीय गतिविधि से पहले अभिभावक और योग्य कानूनी/वित्तीय सलाहकार से नियम जाँचें।</div>
+<div id="dashboard" class="page active">
+<div class="hero"><div class="eyebrow">CURRENT PRINCIPAL BALANCE</div><div class="heroVal" id="totalPrincipal">₹0</div><div class="eyebrow">सभी प्रोफाइल का मौजूदा मूलधन</div></div>
+<div class="grid">
+<div class="stat"><div class="lab">मासिक ब्याज अनुमान</div><strong class="gold" id="monthInterest">₹0</strong></div>
+<div class="stat"><div class="lab">कुल अतिरिक्त मूलधन</div><strong class="green" id="addedPrincipal">₹0</strong></div>
+<div class="stat"><div class="lab">कुल मूलधन वापसी</div><strong class="blue" id="returnedPrincipal">₹0</strong></div>
+<div class="stat"><div class="lab">कुल ब्याज जमा</div><strong class="gold" id="interestPaid">₹0</strong></div>
+</div>
+<div class="toolbar"><button class="tab active" data-page="dashboard">डैशबोर्ड</button><button class="tab" data-page="add">+ नया रिकॉर्ड</button><button class="tab" data-page="monthly">महीने का हिसाब</button><button class="tab" data-page="backup">बैकअप</button></div>
+<input id="search" placeholder="नाम से खोजें..." aria-label="नाम से खोजें">
+<div class="row"><h2>रिकॉर्ड सूची</h2><small id="customerCount"></small></div><div id="customerList" class="people"></div>
+</div>
+<div id="add" class="page"><div class="toolbar"><button class="tab" data-page="dashboard">← वापस</button></div><h2>नया रिकॉर्ड</h2>
+<form id="addForm"><div class="fields">
+<label class="full">नाम<input id="name" required maxlength="60"></label>
+<label class="full">पिता/अभिभावक का नाम<input id="father" maxlength="60"></label>
+<label>शुरुआती रकम (₹)<input id="principal" type="number" min="0.01" step=".01" required></label>
+<label>मासिक दर (%)<input id="rate" type="number" min="0" step=".01" required></label>
+<label class="full">शुरुआत की तारीख<input id="date" type="date" required></label>
+</div><button class="primary" type="submit">रिकॉर्ड सेव करें</button></form></div>
+<div id="monthly" class="page"><div class="toolbar"><button class="tab" data-page="dashboard">← वापस</button></div><h2>मासिक ब्याज अनुमान</h2><p class="foot">मौजूदा मूलधन पर साधारण मासिक अनुमान; पुराने महीनों का बकाया ब्याज इसमें अपने आप नहीं जुड़ता।</p><div id="monthlyList" class="people"></div></div>
+<div id="backup" class="page"><div class="toolbar"><button class="tab" data-page="dashboard">← वापस</button></div><h2>डेटा बैकअप और रीस्टोर</h2>
+<div class="stat"><b>बैकअप डाउनलोड</b><p class="foot">अपने रिकॉर्ड की JSON कॉपी इस डिवाइस में सेव करें। बैकअप फाइल को निजी और सुरक्षित जगह रखें।</p><button class="primary" id="exportBtn">बैकअप डाउनलोड करें</button></div>
+<div class="stat" style="margin-top:10px"><b>बैकअप से डेटा वापस लाएँ</b><p class="foot">पहले डाउनलोड की गई Prime Ledger JSON फाइल चुनें। इम्पोर्ट करने पर मौजूदा रिकॉर्ड बदल जाएँगे। पहले मौजूदा डेटा का बैकअप डाउनलोड कर लें।</p><input id="importFile" type="file" accept=".json,application/json"><button id="importBtn">बैकअप इम्पोर्ट करें</button></div>
+<div class="status" id="backupStatus"></div></div>
+<div id="detail" class="page"><div class="toolbar"><button class="tab" id="backBtn">← रिकॉर्ड सूची</button></div><div id="detailContent"></div></div>
+<div class="foot">IndexedDB का उपयोग किया गया है, जो आम तौर पर localStorage से ज्यादा डेटा संभाल सकता है। कोई तय 1,000-रिकॉर्ड गारंटी नहीं: वास्तविक क्षमता फोन/ब्राउज़र की उपलब्ध स्टोरेज पर निर्भर करती है। ऐप का डेटा इसी डिवाइस/ब्राउज़र में रहता है; दूसरे फोन पर लाने के लिए बैकअप फाइल इम्पोर्ट करें।</div>
+</main>
+<script>
+const DB_NAME="PrimeLedgerDB", STORE="records", DB_VERSION=1;
+let db, records=[], activeId=null;
+const $=id=>document.getElementById(id), money=n=>"₹"+(Number(n)||0).toLocaleString("en-IN",{maximumFractionDigits:2});
+const sum=(r,t)=>r.tx.filter(x=>x.type===t).reduce((s,x)=>s+x.amount,0);
+const balance=r=>Math.max(0,sum(r,"advance")-sum(r,"principal_return"));
+const interest=r=>balance(r)*r.rate/100;
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function openDB(){return new Promise((resolve,reject)=>{let req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=()=>{let d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:"id"})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+function getAll(){return new Promise((resolve,reject)=>{let req=db.transaction(STORE,"readonly").objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error)})}
+function put(record){return new Promise((resolve,reject)=>{let tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).put(record);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}
+function replaceAll(items){return new Promise((resolve,reject)=>{let tx=db.transaction(STORE,"readwrite"),s=tx.objectStore(STORE);s.clear();items.forEach(x=>s.put(x));tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}
+async function refresh(){records=await getAll();render()}
+function showPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===id));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===id))}
+document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>showPage(b.dataset.page));$("backBtn").onclick=()=>showPage("dashboard");
+function rowCard(r){return `<div class="person" data-id="${r.id}"><div class="row"><b>${esc(r.name)}</b><span class="chip">विवरण</span></div><div class="row" style="margin-top:8px"><small>मौजूदा मूलधन: ${money(balance(r))}</small><small>${r.rate}% / माह</small></div><div class="row" style="margin-top:7px"><small>मासिक ब्याज अनुमान</small><b class="gold">${money(interest(r))}</b></div></div>`}
+function render(){
+$("totalPrincipal").textContent=money(records.reduce((s,r)=>s+balance(r),0));
+$("monthInterest").textContent=money(records.reduce((s,r)=>s+interest(r),0));
+$("addedPrincipal").textContent=money(records.reduce((s,r)=>s+sum(r,"advance"),0));
+$("returnedPrincipal").textContent=money(records.reduce((s,r)=>s+sum(r,"principal_return"),0));
+$("interestPaid").textContent=money(records.reduce((s,r)=>s+sum(r,"interest_paid"),0));
+$("customerCount").textContent=records.length+" रिकॉर्ड";
+let q=$("search").value.trim().toLowerCase(),shown=records.filter(r=>r.name.toLowerCase().includes(q));
+$("customerList").innerHTML=shown.map(rowCard).join("")||'<div class="empty">कोई रिकॉर्ड नहीं मिला</div>';
+$("monthlyList").innerHTML=records.map(r=>`<div class="person" data-id="${r.id}"><b>${esc(r.name)}</b><div class="row"><small>मासिक ब्याज अनुमान</small><b class="gold">${money(interest(r))}</b></div><div class="row"><small>मौजूदा मूलधन</small><b>${money(balance(r))}</b></div></div>`).join("")||'<div class="empty">कोई रिकॉर्ड नहीं</div>';
+document.querySelectorAll(".person").forEach(el=>el.onclick=()=>profile(Number(el.dataset.id)));
+}
+$("search").addEventListener("input",render);
+async function profile(id){
+activeId=id;let r=records.find(x=>x.id===id);if(!r)return;
+let history=[...r.tx].sort((a,b)=>new Date(b.at)-new Date(a.at));
+let labels={advance:"अतिरिक्त मूलधन दिया",principal_return:"मूलधन वापस मिला",interest_paid:"ब्याज जमा हुआ"};
+let historyHtml=history.map(t=>{let cls=t.type==="advance"?"plus":t.type==="principal_return"?"minus":"interest",sign=t.type==="advance"?"+":"−";return `<div class="tx ${cls}"><div class="row"><b>${labels[t.type]||"लेन-देन"}</b><span class="amt">${sign}${money(t.amount)}</span></div><small>${new Date(t.at).toLocaleString("hi-IN")} ${t.note?" · "+esc(t.note):""}</small></div>`}).join("");
+$("detailContent").innerHTML=`<h2>${esc(r.name)}</h2><div class="profile"><div class="eyebrow">CURRENT PRINCIPAL BALANCE</div><div class="big">${money(balance(r))}</div><small>शुरुआत: ${esc(r.date)} · दर: ${r.rate}% प्रति माह</small></div>
+<div class="boxgrid"><div class="mini"><span>पिता/अभिभावक</span><strong style="font-size:15px">${esc(r.father||"—")}</strong></div><div class="mini"><span>मासिक ब्याज अनुमान</span><strong class="gold">${money(interest(r))}</strong></div><div class="mini"><span>कुल मूलधन जोड़ा</span><strong>${money(sum(r,"advance"))}</strong></div><div class="mini"><span>कुल मूलधन वापसी</span><strong class="blue">${money(sum(r,"principal_return"))}</strong></div><div class="mini"><span>कुल ब्याज जमा</span><strong class="green">${money(sum(r,"interest_paid"))}</strong></div><div class="mini"><span>लेन-देन की संख्या</span><strong>${r.tx.length}</strong></div></div>
+<h2>नई एंट्री</h2><div class="actions"><button class="primary" id="addAdvance">+ अतिरिक्त रकम</button><button id="returnPrincipal">− मूलधन वापसी</button><button id="payInterest">ब्याज जमा</button></div>
+<h2>लेन-देन की पूरी हिस्ट्री</h2><div class="history">${historyHtml||'<div class="empty">अभी कोई एंट्री नहीं</div>'}</div>
+<div class="foot">हर एंट्री के बाद बैलेंस अपने आप अपडेट होता है। मूलधन वापसी से मूलधन घटता है; ब्याज जमा से मूलधन नहीं बदलता। मासिक ब्याज मौजूदा मूलधन पर अनुमान है, पुराने महीनों का ब्याज स्वतः नहीं जुड़ता।</div>`;
+showPage("detail");$("addAdvance").onclick=()=>addTx("advance");$("returnPrincipal").onclick=()=>addTx("principal_return");$("payInterest").onclick=()=>addTx("interest_paid");
+}
+async function addTx(type){
+let r=records.find(x=>x.id===activeId);if(!r)return;
+let titles={advance:"कितनी अतिरिक्त रकम जोड़ी गई? (₹)",principal_return:"कितना मूलधन वापस मिला? (₹)",interest_paid:"कितना ब्याज जमा हुआ? (₹)"};
+let max=type==="principal_return"?balance(r):type==="interest_paid"?Math.max(0,interest(r)):Infinity;
+let raw=prompt(titles[type]+(Number.isFinite(max)?" अधिकतम: "+money(max):""));if(raw===null)return;
+let amount=Number(raw);if(!Number.isFinite(amount)||amount<=0||amount>max){alert("कृपया सही रकम दर्ज करें।");return}
+let note=prompt("नोट (वैकल्पिक):")||"";
+r.tx.push({id:Date.now(),type,amount,at:new Date().toISOString(),note});
+await put(r);await refresh();profile(activeId);
+}
+$("addForm").onsubmit=async e=>{e.preventDefault();let principal=Number($("principal").value),rate=Number($("rate").value),date=$("date").value;if(!principal||principal<=0||rate<0||!date){alert("सही जानकारी भरें।");return}
+let r={id:Date.now(),name:$("name").value.trim(),father:$("father").value.trim(),rate,date,tx:[{id:Date.now()+1,type:"advance",amount:principal,at:new Date(date+"T12:00:00").toISOString(),note:"शुरुआती रकम"}]};
+await put(r);await refresh();e.target.reset();showPage("dashboard");alert("रिकॉर्ड सेव हो गया।")};
+$("exportBtn").onclick=async()=>{let payload={app:"Prime Ledger",version:6,exportedAt:new Date().toISOString(),records:await getAll()},blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="prime-ledger-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(url);$("backupStatus").textContent="बैकअप फाइल डाउनलोड के लिए तैयार है।"};
+$("importBtn").onclick=async()=>{let f=$("importFile").files[0];if(!f){alert("पहले JSON बैकअप फाइल चुनें।");return}try{let data=JSON.parse(await f.text()),items=Array.isArray(data)?data:data.records;if(!Array.isArray(items)||!items.every(r=>r&&Number.isFinite(Number(r.id))&&typeof r.name==="string"&&Array.isArray(r.tx)))throw Error("invalid");if(!confirm("इम्पोर्ट करने पर इस ब्राउज़र के मौजूदा रिकॉर्ड बदल जाएँगे। पहले उनका बैकअप लिया है?"))return;await replaceAll(items);await refresh();$("backupStatus").textContent=items.length+" रिकॉर्ड सफलतापूर्वक इम्पोर्ट किए गए।";showPage("dashboard")}catch(e){alert("यह Prime Ledger की मान्य JSON बैकअप फाइल नहीं है।")}};
+async function init(){
+db=await openDB();
+let existing=await getAll();
+if(existing.length===0){
+ try{let old=JSON.parse(localStorage.getItem("primeLedgerV5")||"null");if(Array.isArray(old)&&old.length){let migrated=old.map(r=>({id:Number(r.id)||Date.now()+Math.random(),name:r.name||"पुराना रिकॉर्ड",father:r.father||"",rate:Number(r.rate)||0,date:r.date||new Date().toISOString().slice(0,10),tx:Array.isArray(r.tx)?r.tx:[{id:Date.now(),type:"advance",amount:Number(r.principal)||0,at:new Date().toISOString(),note:"V5 से माइग्रेट किया गया शुरुआती बैलेंस"}]}));await replaceAll(migrated);localStorage.removeItem("primeLedgerV5")}else{let samples=[["Raju","Mohan Kumar",5000,1,"2026-11-01"],["Sonu","Ramesh Kumar",2000,1.5,"2026-11-03"],["Monu","Suresh Kumar",3000,1,"2026-11-06"],["Pillu","Raj Kumar",6000,2,"2026-11-09"],["Billu","Amit Kumar",7000,1,"2026-11-12"],["Sillu","Deepak Kumar",8000,1.5,"2026-11-15"]].map((x,i)=>({id:i+1,name:x[0],father:x[1],rate:x[3],date:x[4],tx:[{id:100+i,type:"advance",amount:x[2],at:new Date(x[4]+"T12:00:00").toISOString(),note:"काल्पनिक नमूना"}]}));await replaceAll(samples)}}catch(e){console.warn(e)}
+}
+await refresh();
+}
+init().catch(e=>{alert("इस ब्राउज़र में IndexedDB उपलब्ध नहीं हो पाया। कृपया अपडेटेड Chrome में खोलें।");console.error(e)});
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script></body></html>
